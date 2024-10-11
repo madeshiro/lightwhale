@@ -1,0 +1,11 @@
+# IDE configs
+.vscode/
+.idea/
+
+# Build directories
+**/build/
+
+# Externals dependencies 
+**/externals/
+
+
