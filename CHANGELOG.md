@@ -1,0 +1,1 @@
+# LightWhale project's changelog
