@@ -8,7 +8,7 @@
 
 [![mpl2.0](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-orange)](https://www.mozilla.org/en-US/MPL/2.0/)
 &nbsp;
-![main workflow](https://github.com/madeshiro/lightwhale/actions/workflows/main.yml/badge.svg?branch=main)]
+![main workflow](https://github.com/madeshiro/lightwhale/actions/workflows/main.yml/badge.svg?branch=main)
 
 # LightWhale
 > Low-Rate / Heavy Transmission Control Protocol, specialized for images (and aim for becoming multiple purposes)
@@ -21,13 +21,15 @@ The aim of the LightWhale project is to be able to communicate heavy kind of inf
 To do so, a custom network card based on differents LoRa chips is currently being designed. 
 
 > [!NOTE]
-> This project is an master degree's end-of-study project in the context of the SETSIS master (Embedded Systems and Signal Processing for Images and Sounds) at the Clermont-Auvergne University, France.
+> This project is a master’s degree end-of-study’s project in the context of the SETSIS master 
+> (Embedded Systems and Signal Processing for Images and Sounds)
+> at the Clermont-Auvergne University, France.
 
 > [!IMPORTANT]
 > This project is under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/). 
 ---
 <div align="center">
   
-  [![eupi](https://eupi.uca.fr/uas/Eupi/LOGO_COMPOSANTE/eupi_long.png)](https://eupi.uca.fr)
+  [![eupi](https://eupi.uca.fr/uas/Eupi/LOGO/eupi_long.png)](https://eupi.uca.fr)
   
 </div>
