@@ -7,11 +7,3 @@
 # Date: Oct 2024                                                               #
 #                                                                              #
 ################################################################################
-
-function (link_driver i_fullname)
-
-endfunction()
-
-function (link_module i_modulename IS_COMMON)
-
-endfunction()
