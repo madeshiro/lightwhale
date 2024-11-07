@@ -4,6 +4,7 @@
 
 # Build directories
 **/build/
+**/cmake-build-*/
 
 # Externals dependencies 
 **/externals/
