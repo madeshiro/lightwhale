@@ -17,3 +17,5 @@ else()
 endif()
 message(STATUS "Current project path is ${LIGHTWHALE_PROJECT_ROOT}")
 
+# generic set-up for every cmake file
+include(${LIGHTWHALE_PROJECT_ROOT}/commons/cmake/setup.cmake)
