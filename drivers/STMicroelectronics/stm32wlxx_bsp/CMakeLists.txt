@@ -48,6 +48,7 @@ set (BSP_NUCLEO_SOURCES
 add_library (${NUCLEO} INTERFACE)
 target_include_directories(${NUCLEO} INTERFACE ${NUCLEO_PATH})
 target_sources(${NUCLEO} INTERFACE ${BSP_NUCLEO_SOURCES})
+target_compile_definitions(${NUCLEO} INTERFACE USE_BSP_DRIVER)
 
 ########################################
 #####                ###################
