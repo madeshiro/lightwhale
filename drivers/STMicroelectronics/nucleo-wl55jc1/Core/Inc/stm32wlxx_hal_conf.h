@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    stm32wlxx_hal_conf.h
@@ -15,6 +16,7 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32WLxx_HAL_CONF_H
@@ -32,30 +34,30 @@
   * @brief This is the list of modules to be used in the HAL driver
   */
 #define HAL_MODULE_ENABLED
-#define HAL_ADC_MODULE_ENABLED
-#define HAL_COMP_MODULE_ENABLED
-#define HAL_CRC_MODULE_ENABLED
+/*#define HAL_ADC_MODULE_ENABLED   */
+/*#define HAL_COMP_MODULE_ENABLED   */
+/*#define HAL_CRC_MODULE_ENABLED   */
 #define HAL_CRYP_MODULE_ENABLED
-#define HAL_DAC_MODULE_ENABLED
-#define HAL_GTZC_MODULE_ENABLED
-#define HAL_HSEM_MODULE_ENABLED
-#define HAL_I2C_MODULE_ENABLED
-#define HAL_I2S_MODULE_ENABLED
-#define HAL_IPCC_MODULE_ENABLED
-#define HAL_IRDA_MODULE_ENABLED
-#define HAL_IWDG_MODULE_ENABLED
-#define HAL_LPTIM_MODULE_ENABLED
-#define HAL_PKA_MODULE_ENABLED
+/*#define HAL_DAC_MODULE_ENABLED   */
+/*#define HAL_GTZC_MODULE_ENABLED   */
+/*#define HAL_HSEM_MODULE_ENABLED   */
+/*#define HAL_I2C_MODULE_ENABLED   */
+/*#define HAL_I2S_MODULE_ENABLED   */
+/*#define HAL_IPCC_MODULE_ENABLED   */
+/*#define HAL_IRDA_MODULE_ENABLED   */
+/*#define HAL_IWDG_MODULE_ENABLED   */
+/*#define HAL_LPTIM_MODULE_ENABLED   */
+/*#define HAL_PKA_MODULE_ENABLED   */
 #define HAL_RNG_MODULE_ENABLED
-#define HAL_RTC_MODULE_ENABLED
-#define HAL_SMARTCARD_MODULE_ENABLED
-#define HAL_SMBUS_MODULE_ENABLED
-#define HAL_SPI_MODULE_ENABLED
+/*#define HAL_RTC_MODULE_ENABLED   */
+/*#define HAL_SMARTCARD_MODULE_ENABLED   */
+/*#define HAL_SMBUS_MODULE_ENABLED   */
+/*#define HAL_SPI_MODULE_ENABLED   */
 #define HAL_SUBGHZ_MODULE_ENABLED
-#define HAL_TIM_MODULE_ENABLED
+/*#define HAL_TIM_MODULE_ENABLED   */
 #define HAL_UART_MODULE_ENABLED
-#define HAL_USART_MODULE_ENABLED
-#define HAL_WWDG_MODULE_ENABLED
+/*#define HAL_USART_MODULE_ENABLED   */
+/*#define HAL_WWDG_MODULE_ENABLED   */
 #define HAL_EXTI_MODULE_ENABLED
 #define HAL_CORTEX_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
@@ -149,7 +151,6 @@
 #define LSE_STARTUP_TIMEOUT                 5000UL      /*!< Time out for LSE start up, in ms */
 #endif /* LSE_STARTUP_TIMEOUT */
 
-
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
 
@@ -158,7 +159,7 @@
   * @brief This is the HAL system configuration section
   */
 #define  VDD_VALUE                          3300U                             /*!< Value of VDD in mv */
-#define  TICK_INT_PRIORITY                  ((1uL <<__NVIC_PRIO_BITS) - 1uL)  /*!< tick interrupt priority (lowest by default) */
+#define  TICK_INT_PRIORITY                  0U
 #define  USE_RTOS                           0U
 #define  PREFETCH_ENABLE                    0U
 #define  INSTRUCTION_CACHE_ENABLE           1U
@@ -183,7 +184,6 @@
 /* ################## CRYP peripheral configuration ########################## */
 
 #define USE_HAL_CRYP_SUSPEND_RESUME         1U
-
 
 /* Includes ------------------------------------------------------------------*/
 /**

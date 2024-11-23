@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// File:        stm-nucleo-wl55jc-defs.h
+// File:        stm_nucleo_wl55jc_defs.h
 // Description: Definitions of macros and typedefs for stm-nucleo-wl55jc
 //
 //------------------------------------------------------------------------------
@@ -13,8 +13,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-#ifndef _stm-nucleo-wl55jc_defs_h_
-#define _stm-nucleo-wl55jc_defs_h_
+#ifndef _stm_nucleo_wl55jc_defs_h_
+#define _stm_nucleo_wl55jc_defs_h_
 
 
-#endif // _stm-nucleo-wl55jc_defs_h_
+#endif // _stm_nucleo_wl55jc_defs_h_
