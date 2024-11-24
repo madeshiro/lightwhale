@@ -83,7 +83,6 @@ void HMI::comLedUpdate() const
         BSP_LED_Off(LED_RED);
 }
 
-
 void HMI::setState(HMIState iState)
 {
     _state = iState;
@@ -142,8 +141,8 @@ void HMI::pb2UartCallback()
     {
         HAL_UART_Transmit(
             hcom1,
-            (const uint8_t*)msg16,
-            (uint16_t)len,
+            reinterpret_cast<const uint8_t *>(msg16),
+            static_cast<uint16_t>(len),
             1000
         );
 

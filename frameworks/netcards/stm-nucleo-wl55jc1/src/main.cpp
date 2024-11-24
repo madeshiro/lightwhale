@@ -25,6 +25,28 @@
 extern "C" void Error_Handler(void)
 {
     __disable_irq();
+
+    //
+    // Ask user for manual reset.
+    // Reset HMI by turning on all leds and
+    // making the red LED flashing.
+    //
+
+    // Enable all leds and blink red led
+    BSP_LED_On(LED_BLUE);
+    BSP_LED_On(LED_GREEN);
+
+    auto ledTick = HAL_GetTick();
+    // ReSharper disable once CppDFAEndlessLoop
+    while (true)
+    {
+        // blink at 2Hz
+        if (HAL_GetTick() - ledTick > 500)
+        {
+            ledTick = HAL_GetTick();
+            BSP_LED_Toggle(LED_RED);
+        }
+    }
 }
 
 /**
@@ -37,7 +59,6 @@ extern "C" void st_main(void)
     // ReSharper disable once CppDFAEndlessLoop
     while (true)
     {
-
 
         // Update HMI (10HZ = 100ms)
         if (HAL_GetTick() - Board::GetHMI()->getLastUpdateTime() >= 100)
