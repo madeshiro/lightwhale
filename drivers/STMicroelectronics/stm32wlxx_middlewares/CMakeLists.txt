@@ -90,12 +90,12 @@ set(${PROJECT_UNAME}_LIBS
 
 if ( ${STM32_3P_SUBGHZ_ENABLED} )
     list(APPEND ${PROJECT_UNAME}_LIBS ${SubGHz})
-    message(STATUS "Enable STM32wlxx SubGHz middleware")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx SubGHz middleware")
 endif()
 ##
 if ( ${STM32_3P_FATFS_ENABLED} )
     list(APPEND ${PROJECT_UNAME}_LIBS ${FatFS})
-    message(STATUS "Enable STM32wlxx FatFs middleware")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx FatFs middleware")
 endif()
 
 add_library(${PROJECT_NAME} INTERFACE)

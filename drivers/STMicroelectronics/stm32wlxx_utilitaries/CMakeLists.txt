@@ -55,7 +55,7 @@ target_sources(${Misc} INTERFACE ${Misc_SOURCES})
 ##
 if ( ${STM32_UTIL_MISC_ENABLE} )
     list(APPEND ${PROJECT_UNAME}_UTILS ${Misc})
-    message(STATUS "Enable STM32wlxx misc utilitary")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx misc utilitary")
 endif()
 
 ########################################
@@ -78,7 +78,7 @@ target_sources(${TinyLPM} INTERFACE ${TinyLPM_SOURCES})
 ##
 if ( ${STM32_UTIL_LPM_ENABLE} )
     list(APPEND ${PROJECT_UNAME}_UTILS ${TinyLPM})
-    message(STATUS "Enable STM32wlxx tiny-lpm utilitary")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx tiny-lpm utilitary")
 endif()
 
 ########################################
@@ -87,7 +87,7 @@ endif()
 #####                         ##########
 ########################################
 
-option(STM32_UTIL_SEQ_ENABLE "Enable STM32WLxx Utils sequencer" ON)
+option(STM32_UTIL_SEQ_ENABLE "${BClrG}✓ ${ClrRst}Enable STM32WLxx Utils sequencer" ON)
 set(Seq STM32WLxx_utils_seq)
 set(Seq_PATH ${STM32_UTILITARIES_PATH}/sequencer)
 
@@ -101,7 +101,7 @@ target_sources(${Seq} INTERFACE ${Seq_SOURCES})
 ##
 if ( ${STM32_UTIL_SEQ_ENABLE} )
     list(APPEND ${PROJECT_UNAME}_UTILS ${Seq})
-    message(STATUS "Enable STM32wlxx sequencer utilitary")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx sequencer utilitary")
 endif()
 
 ########################################
@@ -124,7 +124,7 @@ target_sources(${Timer} INTERFACE ${Timer_SOURCES})
 ##
 if ( ${STM32_UTIL_TIMER_ENABLE} )
     list(APPEND ${PROJECT_UNAME}_UTILS ${Timer})
-    message(STATUS "Enable STM32wlxx timer utilitary")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx timer utilitary")
 endif()
 
 ########################################
@@ -147,7 +147,7 @@ target_sources(${Tracer} INTERFACE ${Tracer_SOURCES})
 ##
 if ( ${STM32_UTIL_TRACER_ENABLE} )
     list(APPEND ${PROJECT_UNAME}_UTILS ${Tracer})
-    message(STATUS "Enable STM32wlxx adv-tracer utilitary")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx adv-tracer utilitary")
 endif()
 
 ########################################

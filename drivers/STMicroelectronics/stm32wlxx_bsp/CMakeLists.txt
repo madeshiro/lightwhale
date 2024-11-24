@@ -61,7 +61,7 @@ set(${PROJECT_UNAME}_BSP
 
 if ( ${STM32_BSP_NUCLEO_ENABLED} )
     list(APPEND ${PROJECT_UNAME}_BSP ${NUCLEO})
-    message(STATUS "Enable STM32wlxx Nucleo BSP")
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx Nucleo BSP")
 endif()
 ##
 

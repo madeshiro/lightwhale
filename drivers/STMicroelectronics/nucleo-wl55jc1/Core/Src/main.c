@@ -110,9 +110,9 @@ int main(void)
   BSP_PB_Init(BUTTON_SW2, BUTTON_MODE_EXTI);
   BSP_PB_Init(BUTTON_SW3, BUTTON_MODE_EXTI);
 
-  /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
-  BspCOMInit.BaudRate   = 115200;
-  BspCOMInit.WordLength = COM_WORDLENGTH_8B;
+  /* Initialize COM1 port (115200, 9 bits (8-bit data + 1 stop bit), no parity */
+  BspCOMInit.BaudRate   = 9600;
+  BspCOMInit.WordLength = COM_WORDLENGTH_9B;
   BspCOMInit.StopBits   = COM_STOPBITS_1;
   BspCOMInit.Parity     = COM_PARITY_NONE;
   BspCOMInit.HwFlowCtl  = COM_HWCONTROL_NONE;

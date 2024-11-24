@@ -47,6 +47,8 @@ set(${PROJECT_UNAME}_CORTEX_PATH $ENV{STM32_CUBE_WL}/Drivers/CMSIS/Core)
 #####                  #################
 ########################################
 
+option(STM32_HAL_LL_ENABLE "Enable Low-Layer of the STM32WLxx" ON)
+
 ########################################
 #####                ###################
 # // PROJECT FILES \\ ##################
@@ -66,7 +68,7 @@ message(DEBUG "${PROJECT_NAME}'s sources are\n${${PROJECT_UNAME}_SOURCES}")
 #####                ###################
 ########################################
 
-# create library (static '.a' file)
+# create target's interface
 add_library(${PROJECT_NAME} INTERFACE
 )
 target_sources(${PROJECT_NAME} INTERFACE
@@ -86,5 +88,13 @@ target_include_directories(${PROJECT_NAME}
 # define stm32 device
 target_compile_definitions(${PROJECT_NAME}
     INTERFACE ${DEVICE_FAMILY}${DEVICE_VERSION}
-    INTERFACE USE_FULL_LL_DRIVER # Enable Low Layer
 )
+
+if (STM32_HAL_LL_ENABLE)
+    target_compile_definitions(${PROJECT_NAME}
+        INTERFACE USE_FULL_LL_DRIVER
+    )
+    message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx LL driver")
+endif ()
+
+message(STATUS "${BClrG}✓ ${ClrRst}Enable STM32wlxx HAL driver")

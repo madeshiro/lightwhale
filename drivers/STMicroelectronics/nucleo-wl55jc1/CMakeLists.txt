@@ -21,14 +21,6 @@ if ("$ENV{STM32_CUBE_WL}" STREQUAL "")
 endif()
 
 ########################################
-#####                  #################
-# // PROJECT OPTIONS \\ ################
-#####                  #################
-########################################
-
-set(GLOBAL_ENABLE_COVERAGE OFF CACHE BOOL "Enable coverage options during compilation" FORCE)
-
-########################################
 #####             ######################
 # // SETTING-UP \\ #####################
 #####             ######################
@@ -61,15 +53,6 @@ set(${PROJECT_UNAME}_UTILS_TRACE_PATH ${${PROJECT_UNAME}_UTILITIES_PATH}/trace/a
 set(${PROJECT_UNAME}_UTILS_MISC_PATH ${${PROJECT_UNAME}_UTILITIES_PATH}/misc)
 set(${PROJECT_UNAME}_UTILS_TIMER_PATH ${${PROJECT_UNAME}_UTILITIES_PATH}/timer)
 set(${PROJECT_UNAME}_UTILS_LPM_PATH ${${PROJECT_UNAME}_UTILITIES_PATH}/lpm/tiny_lpm)
-
-########################################
-#####              #####################
-# // COMPILER FLAGS \\ #################
-#####               ####################
-########################################
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${DEVICE_ARCH}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=${DEVICE_ARCH}")
 
 ########################################
 #####                   ################

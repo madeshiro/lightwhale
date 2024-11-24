@@ -13,23 +13,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+// Driver
 #include "main.h"
+// Local
+#include "Board.h"
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 extern "C" void Error_Handler(void)
 {
     __disable_irq();
-}
-
-void BSP_PB_Callback(Button_TypeDef Button)
-{
-    if (BUTTON_SW3 == Button)
-    {
-        BSP_LED_Toggle(LED_BLUE);
-    }
 }
 
 /**
@@ -37,11 +32,18 @@ void BSP_PB_Callback(Button_TypeDef Button)
  */
 extern "C" void st_main(void)
 {
+    Board::Init();
+
     // ReSharper disable once CppDFAEndlessLoop
     while (true)
     {
-        BSP_LED_Toggle(LED_RED);
-        HAL_Delay(1000);
+
+
+        // Update HMI (10HZ = 100ms)
+        if (HAL_GetTick() - Board::GetHMI()->getLastUpdateTime() >= 100)
+        {
+            Board::GetHMI()->update();
+        }
     }
 
     // if reach here, an error occured!
