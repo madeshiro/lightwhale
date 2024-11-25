@@ -55,6 +55,9 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern SUBGHZ_HandleTypeDef hsubghz;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -227,6 +230,34 @@ void EXTI1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles DMA1 Channel 4 Interrupt.
+  */
+void DMA1_Channel4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 Channel 5 Interrupt.
+  */
+void DMA1_Channel5_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 1 */
+}
+
+/**
   * @brief This function handles EXTI Lines [9:5] Interrupt.
   */
 void EXTI9_5_IRQHandler(void)
@@ -252,6 +283,20 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles SUBGHZ Radio Interrupt.
+  */
+void SUBGHZ_Radio_IRQHandler(void)
+{
+  /* USER CODE BEGIN SUBGHZ_Radio_IRQn 0 */
+
+  /* USER CODE END SUBGHZ_Radio_IRQn 0 */
+  HAL_SUBGHZ_IRQHandler(&hsubghz);
+  /* USER CODE BEGIN SUBGHZ_Radio_IRQn 1 */
+
+  /* USER CODE END SUBGHZ_Radio_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

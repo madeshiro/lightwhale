@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "aes.h"
+#include "dma.h"
 #include "rng.h"
 #include "app_subghz_phy.h"
 #include "usart.h"
@@ -92,6 +93,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_AES_Init();
   MX_RNG_Init();
   MX_USART1_UART_Init();

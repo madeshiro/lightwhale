@@ -135,6 +135,7 @@ set(${PROJECT_UNAME}_HEADERS
     include/fsm.h
     include/HMI.h
     include/Board.h
+    include/UART.h
 )
 
 # sources (c/cpp)
@@ -143,6 +144,7 @@ set(${PROJECT_UNAME}_SOURCES
     src/HMI.cpp
     src/Board.cpp
     src/Board.cpp
+    src/UART.cpp
 )
 
 ########################################

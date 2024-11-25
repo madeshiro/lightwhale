@@ -75,6 +75,7 @@ add_subdirectory(${LIGHTWHALE_PROJECT_ROOT}/drivers/STMicroelectronics/stm32wlxx
 set(${PROJECT_UNAME}_SOURCES
     # Core
     Core/Src/aes.c
+    Core/Src/dma.c
     Core/Src/gpio.c
     Core/Src/main.c
     Core/Src/rng.c

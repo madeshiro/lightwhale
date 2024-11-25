@@ -97,7 +97,6 @@ private:
 
     HMIState _state = HMIState::k_none; /// the current HMI state, default to none
     uint32_t _lastUpdate = 0;
-    uint32_t _lastUpdate1Hz = 0;
 
     /// Board class manage this singleton
     friend class Board;
