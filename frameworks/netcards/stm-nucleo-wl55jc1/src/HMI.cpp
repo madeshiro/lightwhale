@@ -2,7 +2,7 @@
 #include "HMI.h"
 #include "Board.h"
 // STL
-#include <cstring>
+#include <usart.h>
 
 void BSP_PB_Callback(Button_TypeDef Button)
 {
@@ -44,7 +44,7 @@ void HMI::update()
     }
     else
     {
-        comLedUpdate();
+        //comLedUpdate();
     }
 
     // update HMI update time
@@ -96,17 +96,17 @@ void HMI::pb1Callback()
 {
     _state = static_cast<HMIState>((static_cast<uint8_t>(_state)+1)%3);
 
-    // Force update HMI
-    BSP_LED_Off(LED_BLUE);
-    BSP_LED_Off(LED_GREEN);
-    BSP_LED_Off(LED_RED);
-
     // Display menu selection
     // - BLUE  = LORA
     // - GREEN = UART
     // - RED   = NONE
     BSP_LED_On(static_cast<Led_TypeDef>(_state));
     HAL_Delay(500);
+
+    // Force update HMI
+    BSP_LED_Off(LED_BLUE);
+    BSP_LED_Off(LED_GREEN);
+    BSP_LED_Off(LED_RED);
 }
 
 //
@@ -128,8 +128,8 @@ void HMI::pb2UartCallback()
     auto tick = HAL_GetTick() + 100;
     auto* hcom1 = &hcom_uart[COM1];
 
-    const char* msg = "Hello World from UART\n";
-    size_t len = strlen(msg);
+    const uint8_t msg[] = {0x88, 0x93, 0x13, 0x44, 0x52, 0x61, 0xff};
+    size_t len = sizeof(msg);
 
     auto* msg16 = new uint16_t[len];
     for (size_t i = 0; i < len; i++)
@@ -137,17 +137,17 @@ void HMI::pb2UartCallback()
         msg16[i] = 0x100 | static_cast<uint16_t>(msg[i]);
     }
 
-    for (size_t i = 0; i < 100; i++)
+    for (size_t i = 0; i < 5*1000; i++)
     {
         HAL_UART_Transmit(
             hcom1,
-            reinterpret_cast<const uint8_t *>(msg16),
+            msg,
             static_cast<uint16_t>(len),
             1000
         );
 
-        // 20Hz
-        if (HAL_GetTick() - tick >= 50)
+        // 15Hz
+        if (HAL_GetTick() - tick >= 66)
         {
             BSP_LED_Toggle(LED_GREEN);
             tick = HAL_GetTick();

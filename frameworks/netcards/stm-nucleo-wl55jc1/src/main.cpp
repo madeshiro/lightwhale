@@ -24,7 +24,7 @@
  */
 extern "C" void Error_Handler(void)
 {
-    __disable_irq();
+    //__disable_irq();
 
     //
     // Ask user for manual reset.
@@ -41,7 +41,7 @@ extern "C" void Error_Handler(void)
     while (true)
     {
         // blink at 2Hz
-        if (HAL_GetTick() - ledTick > 500)
+        if (HAL_GetTick() - ledTick >= 500)
         {
             ledTick = HAL_GetTick();
             BSP_LED_Toggle(LED_RED);

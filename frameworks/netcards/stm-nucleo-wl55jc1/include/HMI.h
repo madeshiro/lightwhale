@@ -99,7 +99,7 @@ private:
     uint32_t _lastUpdate = 0;
     uint32_t _lastUpdate1Hz = 0;
 
-    /// Session class manage this singleton
+    /// Board class manage this singleton
     friend class Board;
 };
 
