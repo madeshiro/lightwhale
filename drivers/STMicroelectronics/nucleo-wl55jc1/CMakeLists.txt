@@ -78,6 +78,7 @@ set(${PROJECT_UNAME}_SOURCES
     Core/Src/dma.c
     Core/Src/gpio.c
     Core/Src/main.c
+    Core/Src/lptim.c
     Core/Src/rng.c
     Core/Src/stm32_adv_trace_if.c
     Core/Src/stm32_lpm_if.c

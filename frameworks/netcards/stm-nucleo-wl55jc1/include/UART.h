@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 //
 // File:        UART.h
 // Description: Definitions of UART communication module
@@ -18,7 +18,9 @@
 // Local
 #include "stm-nucleo-wl55jc-defs.h"
 // HAL
+#include <stm32wlxx_hal_dma.h>
 #include <stm32wlxx_hal_uart.h>
+#include <tuple>
 
 
 /**
@@ -74,22 +76,30 @@ public:
      */
     [[nodiscard]] uint32_t getStopBitMode() const;
 
+    [[nodiscard]] constexpr uint32_t inAvailable() const
+        { return _pRxBufferEnd - _pRxBufferPtr; }
+
     //
     // Tx
     //
 
-    uint16_t transmit(const uint8_t* data, uint16_t size) const;
-    uint16_t transmit(const char* data, uint16_t size) const;
+    HAL_StatusTypeDef transmit(const uint8_t* ipData, uint16_t size) const;
+    HAL_StatusTypeDef transmit(const char* ipData) const;
+
+    UART& operator << (const std::tuple<const uint8_t*, uint16_t>& iData);
+    UART& operator << (const char* ipData);
 
     //
     // Rx
     //
 
-    uint16_t receive(uint8_t* data, uint16_t size) const;
-    uint16_t receive(char* data, uint16_t size) const;
+    uint16_t receive(uint8_t* iopData, uint16_t size, uint32_t iTimeout = HAL_MAX_DELAY);
+    uint16_t receive(char* iopData, uint16_t size, uint32_t iTimeout = HAL_MAX_DELAY);
+
+    UART& operator >> (std::tuple<uint8_t*, uint16_t> &ioData);
+    UART& operator >> (std::tuple<char*, uint16_t> &ioData);
 
 private:
-
     //
     // Constructors
     //
@@ -99,11 +109,9 @@ private:
      *
      * @param ipHuart the UART HAL Handle
      * @param iRxBufferSize the DMA Rx buffer (max Rx size before interrupt Rx)
-     * @param iTxBufferSize the DMA Tx buffer (max Tx size per transmission)
      */
     explicit UART(UART_HandleTypeDef* ipHuart,
-        uint16_t iRxBufferSize = 1024, // 1 KiB
-        uint8_t iTxBufferSize = 256    // 256 B
+        uint16_t iRxBufferSize = 1024 // 1 KiB
         );
 
     //
@@ -113,12 +121,19 @@ private:
 
     // elw = embedded lightwhale (cf. lwcore)
     // elw::uniq_ptr _pRxBuffer;
-    uint8_t* _pRxBuffer;
+    //
+    // or
+    //
+    // elw::circular_buffer<uint8_t> _rxBuffer;
+    uint8_t* _pRxBufferBase;
+    uint8_t* _pRxBufferPtr;
+    uint8_t* _pRxBufferEnd;
 
-    // elw::uniq_ptr _pTxBuffer;
-    uint8_t* _pTxBuffer;
+    uint16_t _rxBufferSize;
+
 
     friend class Board;
+    friend void HAL_UART_RxCpltCallback(UART_HandleTypeDef *);
 };
 
 #endif // UART_H

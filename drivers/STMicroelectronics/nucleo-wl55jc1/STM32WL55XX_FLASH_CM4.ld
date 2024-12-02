@@ -17,8 +17,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
   ROM    (rx)    : ORIGIN = 0x08000000, LENGTH = 256K
-  RAM1   (xrw)   : ORIGIN = 0x20000000, LENGTH = 32K    /* Non-backup SRAM1 */
-  RAM2   (xrw)   : ORIGIN = 0x20008000, LENGTH = 32K    /* Backup SRAM2 */
+  RAM1   (xrw)   : ORIGIN = 0x20000000, LENGTH = 48K    /* Non-backup SRAM1 */
+  RAM2   (xrw)   : ORIGIN = 0x2000C000, LENGTH = 16K    /* Backup SRAM2 */
 }
 
 /* Sections */

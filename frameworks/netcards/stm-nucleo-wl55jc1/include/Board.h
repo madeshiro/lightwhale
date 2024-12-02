@@ -18,6 +18,7 @@
 // local
 #include "stm-nucleo-wl55jc-defs.h"
 #include "HMI.h"
+#include "UART.h"
 
 //
 // Forward declarations
@@ -49,17 +50,33 @@ public:
      */
     static HMI* GetHMI();
 
-    //
-    // Constructor/Destructor
-    //
+    /**
+     *
+     * @return
+     */
+    static UART* GetCOM1();
 
+    //
+    // Rule of zero
+    //
+    Board(const Board&) = delete;
+    Board& operator=(const Board&) = delete;
+
+    Board(Board&&) = delete;
+    Board& operator=(Board&&) = delete;
+
+    ~Board() = default;
+
+    //
+    // Constructor(s)
+    //
     Board();
-    ~Board();
 
 private:
     static /*lw::core_ptr<Board>*/ Board* _Instance;
 
-    HMI* _pHmi;
+    HMI     _hmi;
+    UART    _uartCom1;
 };
 
 #endif // BOARD_H

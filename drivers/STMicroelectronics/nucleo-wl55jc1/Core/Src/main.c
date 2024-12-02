@@ -20,6 +20,7 @@
 #include "main.h"
 #include "aes.h"
 #include "dma.h"
+#include "lptim.h"
 #include "rng.h"
 #include "app_subghz_phy.h"
 #include "usart.h"
@@ -98,6 +99,7 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   MX_SubGHz_Phy_Init();
+  MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

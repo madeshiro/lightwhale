@@ -20,4 +20,10 @@
 #error "This project is built in C++"
 #endif // __cplusplus
 
+//
+// UART
+//
+
+#define UART_BUFFER_MAX_SIZE 0xffff
+
 #endif // _stm_nucleo_wl55jc_defs_h_

@@ -66,6 +66,16 @@ set(HEAP_UNIT   "KB"     # KiloByte => ${HEAP_SIZE}*2^10. {B/KB/MB/GB}
 set(HEAP_ALLOC  "STATIC" # STATIC/DYNAMIC => static = .bss section
     CACHE STRING "Heap allocation style (dynamic or static)" FORCE
 )
+set(HEAP_PAGE_SIZE "512"
+    CACHE STRING "Size per page (bytes)" FORCE
+)
+set(HEAP_PAGE_MAX_BLOCK_SIZE "512"
+    CACHE STRING "Maximum block size manageable by a page" FORCE
+)
+
+if (${HEAP_PAGE_MAX_BLOCK_SIZE} GREATER ${HEAP_PAGE_SIZE})
+    message(FATAL_ERROR "Maximum page block's size cannot be greater that the page size !")
+endif()
 
 ########################################
 #####                       ############

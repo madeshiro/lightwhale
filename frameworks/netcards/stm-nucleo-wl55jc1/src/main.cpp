@@ -56,9 +56,53 @@ extern "C" void st_main(void)
 {
     Board::Init();
 
+    // UART_Rx
+    uint8_t uartRx[9] = {0};
+    bool uartRxState = false; // not in a receiving state
+    uint32_t lastRxUpdate = 0;
+
     // ReSharper disable once CppDFAEndlessLoop
     while (true)
     {
+        auto uartState = HAL_UART_Receive(&hcom_uart[COM1], uartRx, 8, 1000);
+
+        if (HAL_OK == uartState)
+        {
+            if (true == uartRxState)
+            {
+                if (HAL_GetTick() - lastRxUpdate >= 66
+                    && HMIState::k_uartCom == Board::GetHMI()->getState())
+                {
+                    BSP_LED_Toggle(LED_RED);
+                    BSP_LED_Off(LED_BLUE);
+                    lastRxUpdate = HAL_GetTick();
+                }
+            }
+
+            uartRxState = true;
+        }
+        else if (HAL_GetTick() - lastRxUpdate > 500)
+        {
+            if (HMIState::k_uartCom == Board::GetHMI()->getState())
+            {
+                BSP_LED_On(LED_BLUE);
+                BSP_LED_Off(LED_RED);
+                lastRxUpdate = HAL_GetTick();
+            }
+            uartRxState = false;
+            // BSP_LED_On(LED_GREEN);
+            // BSP_LED_Off(LED_BLUE);
+
+            if (!(HAL_UART_GetState(&hcom_uart[COM1]) | HAL_UART_STATE_READY))
+            {
+                HAL_UART_AbortReceive(&hcom_uart[COM1]);
+            }
+        }
+        else
+        {
+            // BSP_LED_On(LED_BLUE);
+            // BSP_LED_Off(LED_GREEN);
+        }
 
         // Update HMI (10HZ = 100ms)
         if (HAL_GetTick() - Board::GetHMI()->getLastUpdateTime() >= 100)
