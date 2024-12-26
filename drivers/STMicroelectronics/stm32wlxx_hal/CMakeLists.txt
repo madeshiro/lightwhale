@@ -1,5 +1,5 @@
 ################################################################################
-#                                                                              #
+#              /clion                                                                #
 # File: CMakeLists.txt                                                         #
 # CMakeLists to generate and build STM32CubeWL (external dependencies)         #
 #                                                                              #
