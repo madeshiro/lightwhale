@@ -47,6 +47,7 @@ using memsize_t = uint32_t;
 
 #define LWCORE_MEMSIZE_MAXUINT 0xFFFFFFFF
 #define LWCORE_MEMSIZE_MAXINT  0x7FFFFFFF
+#define LWCORE_MEMSIZE_HIGHBIT (LWCORE_MEMSIZE_MAXUINT ^ LWCORE_MEMSIZE_MAXINT)
 #elif LWCORE_MEMORY_SIZE_T == 64
 static_assert (sizeof(size_t) == 8, "Usage of 64bits size_t on a 32bits architecture!");
 using memsize_t = uint64_t;
@@ -58,16 +59,26 @@ using memsize_t = uint64_t;
 #endif
 
 
-#ifdef LWCORE_MEMORY_TRACE_LEAKS
+#ifndef LWCORE_MEMORY_TRACE_LEAKS
 #define /*NOLINT*/ __lwcore_monitoring__
 #define /*NOLINT*/ __lwcore_trace__
 #define /*NOLINT*/ __lwcore_ptrace__
+#define __lwcore_trace_t__
 
 #else
 #pragma message ("Info: Memory leaks detection enabled")
 #define /*NOLINT*/ __lwcore_monitoring__ , const char* __pFile__, int __lineno__
 #define /*NOLINT*/ __lwcore_trace__ ,__pFile__ ,__lineno__
 #define /*NOLINT*/ __lwcore_ptrace__ ,__FILE__,__LINE__
+#define /*NOLINT*/ __lwcore_strace(p) \
+    new (p) lwcore_trace { __pFile, __lineno__ }; static_cast<void*>(p)+=sizeof(lwcore_trace)
+
+using lwcore_trace = struct lwcore_trace
+{
+    const char* _pFile;
+    int         _line;
+};
+#define /*NOLINT*/ __lwcore_trace_t__ lwcore_trace _lwcoreTrace;
 
 #endif // LWCORE_MEMORY_TRACE_LEAKS
 
@@ -117,7 +128,24 @@ using memsize_t = uint64_t;
 
 namespace lw
 {
-    
+    template /*NOLINT*/ <bool, typename _ReturnT, _ReturnT, _ReturnT>
+    struct value_if
+    {
+    };
+
+    template /*NOLINT*/ < typename _ReturnT, _ReturnT _IfTrue, _ReturnT _IfFalse >
+    struct value_if<true, _ReturnT, _IfTrue, _IfFalse>
+    {
+        using value_type = _ReturnT;
+        static constexpr value_type value = _IfTrue;
+    };
+
+    template /*NOLINT*/ < typename _ReturnT, _ReturnT _IfTrue, _ReturnT _IfFalse >
+    struct value_if<false, _ReturnT, _IfTrue, _IfFalse>
+    {
+        using value_type = _ReturnT;
+        static constexpr value_type value = _IfFalse;
+    };
 } // namespace lw
 
 #endif // _lwcore_defs_h_

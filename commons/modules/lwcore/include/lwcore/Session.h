@@ -94,7 +94,7 @@ namespace lw
 
 namespace elw // Embedded LightWhale
 {
-    using Session = lw::Session;
+    using EmbeddedApp = lw::Session;
 }
 
 #endif //Session_H

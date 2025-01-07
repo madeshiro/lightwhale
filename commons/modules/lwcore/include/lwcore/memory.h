@@ -46,10 +46,10 @@ constexpr unsigned long long operator ""_GiB(unsigned long long n)
     return n * LWCORE_UNIT_GiB;
 }
 
-#define MEMORY_CHUNK_DEFINE_PAGING(name, size, min_block, max_block, page_size) \
+#define MEMORY_CHUNK_DEFINE_PAGING(name, size, page_size, block_alignas, cache_size) \
     extern const char __chunk_name_##name[] = #name; \
     using _chunk_t_##name = lw::memory::detail::chunks::paging< \
-        __chunk_name_##name, size, min_block, max_block, page_size \
+        __chunk_name_##name, size, page_size, block_alignas, cache_size \
     >;
 
 #define MEMORY_CHUNK_DEFINE_STACK(name, size) \
@@ -239,6 +239,30 @@ namespace lw::memory
             static constexpr bool value = is_reserved_chunk<chunk_t>::value;
         };
 
+        template < typename chunk_t >
+        struct is_stack_chunk;
+
+        template < typename chunk_t, typename... chunks_t >
+        struct count_stack_chunk
+        {
+            static constexpr uint32_t value =
+                value_if<is_stack_chunk<chunk_t>::value,int, 1, 0>::value
+                + count_stack_chunk<chunks_t...>::value;
+        };
+
+        template < typename chunk_t >
+        struct count_stack_chunk<chunk_t>
+        {
+            static constexpr uint32_t value =
+                value_if<is_stack_chunk<chunk_t>::value,int, 1, 0>::value;
+        };
+
+        template < typename... chunk_t>
+        struct is_stack_chunk_single
+        {
+            static constexpr bool value = count_stack_chunk<chunk_t...>::value <= 1;
+        };
+
         constexpr bool is_powerof_two(size_t value)
         {
             return value && (value & value - 1) == 0;
@@ -249,6 +273,8 @@ namespace lw::memory
         {
             static_assert (has_reserved_chunk<chunk_t...>::value,
                 "make sure to integrate a 'reserved' chunk for memory headers");
+            static_assert (is_stack_chunk_single<chunk_t...>::value,
+                "creating more than one stack may cause trouble to the pool memory while pushing/poping values");
 
             static constexpr size_t _heap_size = addition_chunk_size<chunk_t...>::value;
             static constexpr size_t _chunks_N  = sizeof...(chunk_t);
@@ -271,16 +297,14 @@ namespace lw::memory
             template <
                 const char* _name_,
                 size_t _chunk_size_,
-                size_t _block_size_inliers_min_,
-                size_t _block_size_inliers_max_,
-                size_t _page_size_,
-                size_t _page_cache_ = 4U
+                size_t _page_size_     = 512U,
+                size_t _block_alignas_ = sizeof(void*), // memory alignment and min-block's size
+                size_t _page_cache_    = 4U
             >
             struct paging
             {
-                static_assert (is_powerof_two(_block_size_inliers_min_));
-                static_assert (is_powerof_two(_block_size_inliers_max_));
-                static_assert (_page_size_%_block_size_inliers_max_ == 0);
+                static_assert (is_powerof_two(_block_alignas_));
+                static_assert (_page_size_%_block_alignas_ == 0);
                 static_assert (_chunk_size_%_page_size_ == 0);
 
                 static constexpr const char* _name = _name_;
@@ -289,8 +313,7 @@ namespace lw::memory
                     reinterpret_cast<size_t>(_name),
                     static_cast<size_t>( type::paging ),
                     _chunk_size_,
-                    _block_size_inliers_min_,
-                    _block_size_inliers_max_,
+                    _block_alignas_,
                     _page_size_,
                     _page_cache_
                 };
@@ -369,6 +392,18 @@ namespace lw::memory
             static constexpr bool value = true;
         };
 
+        template < typename >
+        struct is_stack_chunk
+        {
+            static constexpr bool value = false;
+        };
+
+        template <const char* _name_, size_t _chunk_size_>
+        struct is_stack_chunk<chunks::stack<_name_, _chunk_size_>>
+        {
+            static constexpr bool value = true;
+        };
+
         namespace chunk
         {
             struct __header__ /*NOLINT*/
@@ -384,7 +419,7 @@ namespace lw::memory
                 const chunks::type _type;
             public:
                 size_t _chunkSize;
-                size_t _blockSizes[2];
+                size_t _blockAlignas;
                 size_t _pageSize;
                 size_t _pageCache;
             };
@@ -432,7 +467,6 @@ namespace lw::memory
 
         // Alias to a heap type
         using ptr_t = uint8_t*;
-        using refptr_t = ptr_t&;
 
         // public const traits
         const char* name = _pHeader->_name;
@@ -445,13 +479,25 @@ namespace lw::memory
 
             struct Page
             {
+                ptr_t* _pPage;
+                uint8_t* _pMask;
+                memsize_t _blockSize;
 
+                ptr_t alloc(size_t iBlockCnt);
+                void free(ptr_t ipAddr, size_t iBlockCnt);
             };
         public:
             ptr_t allocate(size_t __lwcore_monitoring__);
-            bool deallocate(ptr_t __lwcore_monitoring__);
+            bool deallocate(ptr_t, size_t __lwcore_monitoring__);
         private:
             explicit Paging(Chunk& iParent);
+
+            //
+            // Private methods
+            //
+
+            Page&& searchPage(size_t iRequiredSize) const;
+            Page&& getPageFromPointer(ptr_t ipPtr) const;
 
             //
             // Private fields
@@ -541,7 +587,7 @@ namespace lw::memory
                  * @return the block address if it is available and size fit the requested size
                  * to allocate, otherwise, it will return @code nullptr@endcode.
                  */
-                void * alloc(memsize_t&) const;
+                void * alloc(memsize_t& __lwcore_monitoring__) const;
 
                 /**
                  * Make the block available to use. Any next block will be merged with this one if
@@ -603,6 +649,8 @@ namespace lw::memory
         //
         // Memory Allocation
         //
+
+        bool isFrom(ptr_t ipPtr) const;
 
     private:
         Chunk(detail::chunk::__header__* ipDetailedHeader,

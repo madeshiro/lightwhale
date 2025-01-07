@@ -6,8 +6,6 @@
 #include "lwcore/memory.h"
 #include "lwcore/RuntimeException.h"
 
-#define memsize_highbit (LWCORE_MEMSIZE_MAXUINT ^ LWCORE_MEMSIZE_MAXINT)
-
 namespace lw::memory
 {
     Chunk::Buffer& Chunk::asBuffer() const
@@ -32,10 +30,12 @@ namespace lw::memory
     // Chunk::Paging
     //
 
+
+
     Chunk::Paging::Paging(Chunk& iParent)
         : _chunk(iParent)
     {
-        ptr_t pHdrOffset     = _chunk._pHeaderStart + sizeof(*this);
+        ptr_t pHdrOffset     = &_chunk._pHeaderStart[sizeof(*this)];
         size_t headerMaxSize = _chunk._pHeaderEnd - pHdrOffset;
 
         //>> Prepare cache
@@ -58,7 +58,7 @@ namespace lw::memory
         // Update max avail size inside the header
         headerMaxSize = _chunk._pHeaderEnd - pHdrOffset;
 
-        _maskBytePerPage = detail()->_pageSize / detail()->_blockSizes[0];
+        _maskBytePerPage = detail()->_pageSize / detail()->_blockAlignas;
         _maxAvailPages   = detail()->_chunkSize / detail()->_pageSize;
 
         size_t currentHeaderUsage = _maxAvailPages * (sizeof(memsize_t) + _maskBytePerPage);
@@ -71,11 +71,10 @@ namespace lw::memory
             _maxAvailPages /= 2;
             detail()->_pageSize <<= 1;
 
-            _maskBytePerPage = detail()->_pageSize / detail()->_blockSizes[0];
+            _maskBytePerPage = detail()->_pageSize / detail()->_blockAlignas;
             _maxAvailPages   = detail()->_chunkSize / detail()->_pageSize;
 
-            currentHeaderUsage = _maxAvailPages * (sizeof(memsize_t) + _maskBytePerPage)
-            > headerMaxSize;
+            currentHeaderUsage = _maxAvailPages * (sizeof(memsize_t) + _maskBytePerPage);
 
             // if maxAvailPages equals 0, it means that the reserved chunk
             // used for chunks' headers is too small and can't handle
@@ -99,12 +98,47 @@ namespace lw::memory
 
     Chunk::ptr_t Chunk::Paging::allocate(size_t iSize __lwcore_monitoring__)
     {
-// TODO
+        Page page = searchPage(iSize);
+        return page.alloc(iSize / page._blockSize);
     }
 
-    bool Chunk::Paging::deallocate(ptr_t ipPtr __lwcore_monitoring__)
+    bool Chunk::Paging::deallocate(ptr_t ipPtr, size_t iSize __lwcore_monitoring__)
     {
-// TODO
+        Page page = getPageFromPointer(ipPtr);
+        if (page._pPage == nullptr)
+        {
+            return false;
+        }
+
+        page.free(ipPtr, iSize / page._blockSize);
+        return true;
+    }
+
+    Chunk::Paging::Page&& Chunk::Paging::searchPage(size_t iRequiredSize) const
+    {
+        // Search into cache first
+        for (auto cacheIndex = 0UL; cacheIndex < detail()->_pageCache; cacheIndex++)
+        {
+            auto* pPage = _pCache[cacheIndex];
+            if (nullptr == pPage
+                || pPage->_blockSize >= iRequiredSize
+                || iRequiredSize / pPage->_blockSize > 4
+                )
+            {
+                // Here, we try to avoid using page from cache where
+                // block size is larger than the required size
+                // or, if the page's block size is more than 4 times tinier
+                // than the required size.
+                continue;
+            }
+
+            // TODO
+        }
+    }
+
+    Chunk::Paging::Page&& Chunk::Paging::getPageFromPointer(ptr_t ipPtr) const
+    {
+        // TODO
     }
 
     //
@@ -153,7 +187,7 @@ namespace lw::memory
             return *this;
         }
 
-        auto pData = _pData + size();
+        const auto pData = _pData + size();
         memsize_t* pHeader = _pHeader + size() / _parent._minBufferSize;
 
         return {_parent, pHeader, pData};
@@ -161,18 +195,25 @@ namespace lw::memory
 
     constexpr bool Chunk::Buffer::Block::isAvailable() const
     {
-        return *_pHeader & memsize_highbit == 0;
+        return *_pHeader & LWCORE_MEMSIZE_HIGHBIT == 0;
     }
 
-    void* Chunk::Buffer::Block::alloc(memsize_t& iSize) const
+    void* Chunk::Buffer::Block::alloc(memsize_t& iSize __lwcore_monitoring__) const
     {
         iSize = _parent.roundSize(iSize);
         if (!isAvailable() || iSize == 0 || size() < iSize)
         {
+            // Block isn't available or the size does not match the size requirement
             return nullptr;
         }
 
-        _pHeader[iSize/_parent._minBufferSize] = size() - iSize;
+        // If the required size is lower than the block size,
+        // split the block in two
+        if (iSize < size())
+        {
+            // set the split block size
+            _pHeader[iSize/_parent._minBufferSize] = size() - iSize;
+        }
         return _pData;
     }
 
@@ -235,7 +276,7 @@ namespace lw::memory
             block._pData = b._pData;
         }
 
-        return block.alloc(iSize);
+        return block.alloc(iSize __lwcore_trace__);
     }
 
     void Chunk::Buffer::deallocate(void *p) const
