@@ -15,15 +15,16 @@
  */
 #ifndef _stm_nucleo_wl55jc_defs_h_
 #define _stm_nucleo_wl55jc_defs_h_
+#include "inttypes.h"
 
-#ifndef __cplusplus
-#error "This project is built in C++"
-#endif // __cplusplus
+typedef enum
+{
+    k_lw_session_state_undefined = 0,
+    k_lw_session_state_connected = 1,
+    k_lw_session_state_standalone = 2,
+    k_lw_session_state_error = 3,
+} lw_session_state;
 
-//
-// UART
-//
-
-#define UART_BUFFER_MAX_SIZE 0xffff
+typedef uint8_t lw_byte;
 
 #endif // _stm_nucleo_wl55jc_defs_h_
