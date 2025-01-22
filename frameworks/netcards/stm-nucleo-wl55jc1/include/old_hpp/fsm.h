@@ -1,7 +1,8 @@
 //------------------------------------------------------------------------------
 //
-// File:        stm_nucleo_wl55jc_defs.h
-// Description: Definitions of macros and typedefs for stm-nucleo-wl55jc
+// File:        fsm.h
+// Description: Definitions of the nucleo's machine state.
+//              Core feature of the nucleo's behavior
 //
 //------------------------------------------------------------------------------
 //
@@ -13,18 +14,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-#ifndef _stm_nucleo_wl55jc_defs_h_
-#define _stm_nucleo_wl55jc_defs_h_
-#include "inttypes.h"
+#ifndef _fsm_h_
+#define _fsm_h_
+#include <cstdint>
 
-typedef enum
+enum class NucleoState : uint8_t
 {
-    k_lw_session_state_undefined = 0,
-    k_lw_session_state_connected = 1,
-    k_lw_session_state_standalone = 2,
-    k_lw_session_state_error = 3,
-} lw_session_state;
+    k_none = 0, // undefined state, lead to Error_Handler
 
-typedef uint8_t lw_byte;
+    k_hmiSelection = 0x01, // select current HMI behavior (LED)
+};
 
-#endif // _stm_nucleo_wl55jc_defs_h_
+
+#endif // _fsm_h_
