@@ -65,8 +65,6 @@ void st_main(void);
 #define RCC_OSC32_OUT_GPIO_Port GPIOC
 #define FE_CTRL3_Pin GPIO_PIN_3
 #define FE_CTRL3_GPIO_Port GPIOC
-#define FE_CTRL2_Pin GPIO_PIN_5
-#define FE_CTRL2_GPIO_Port GPIOC
 #define FE_CTRL1_Pin GPIO_PIN_4
 #define FE_CTRL1_GPIO_Port GPIOC
 

@@ -25,6 +25,7 @@
 /* USER CODE END 0 */
 
 LPTIM_HandleTypeDef hlptim1;
+LPTIM_HandleTypeDef hlptim2;
 
 /* LPTIM1 init function */
 void MX_LPTIM1_Init(void)
@@ -40,10 +41,14 @@ void MX_LPTIM1_Init(void)
   hlptim1.Instance = LPTIM1;
   hlptim1.Init.Clock.Source = LPTIM_CLOCKSOURCE_APBCLOCK_LPOSC;
   hlptim1.Init.Clock.Prescaler = LPTIM_PRESCALER_DIV1;
-  hlptim1.Init.Trigger.Source = LPTIM_TRIGSOURCE_SOFTWARE;
+  hlptim1.Init.UltraLowPowerClock.Polarity = LPTIM_CLOCKPOLARITY_RISING;
+  hlptim1.Init.UltraLowPowerClock.SampleTime = LPTIM_CLOCKSAMPLETIME_DIRECTTRANSITION;
+  hlptim1.Init.Trigger.Source = LPTIM_TRIGSOURCE_0;
+  hlptim1.Init.Trigger.ActiveEdge = LPTIM_ACTIVEEDGE_RISING;
+  hlptim1.Init.Trigger.SampleTime = LPTIM_TRIGSAMPLETIME_DIRECTTRANSITION;
   hlptim1.Init.OutputPolarity = LPTIM_OUTPUTPOLARITY_HIGH;
   hlptim1.Init.UpdateMode = LPTIM_UPDATE_IMMEDIATE;
-  hlptim1.Init.CounterSource = LPTIM_COUNTERSOURCE_INTERNAL;
+  hlptim1.Init.CounterSource = LPTIM_COUNTERSOURCE_EXTERNAL;
   hlptim1.Init.Input1Source = LPTIM_INPUT1SOURCE_GPIO;
   hlptim1.Init.Input2Source = LPTIM_INPUT2SOURCE_GPIO;
   if (HAL_LPTIM_Init(&hlptim1) != HAL_OK)
@@ -53,6 +58,37 @@ void MX_LPTIM1_Init(void)
   /* USER CODE BEGIN LPTIM1_Init 2 */
 
   /* USER CODE END LPTIM1_Init 2 */
+
+}
+/* LPTIM2 init function */
+void MX_LPTIM2_Init(void)
+{
+
+  /* USER CODE BEGIN LPTIM2_Init 0 */
+
+  /* USER CODE END LPTIM2_Init 0 */
+
+  /* USER CODE BEGIN LPTIM2_Init 1 */
+
+  /* USER CODE END LPTIM2_Init 1 */
+  hlptim2.Instance = LPTIM2;
+  hlptim2.Init.Clock.Source = LPTIM_CLOCKSOURCE_APBCLOCK_LPOSC;
+  hlptim2.Init.Clock.Prescaler = LPTIM_PRESCALER_DIV1;
+  hlptim2.Init.Trigger.Source = LPTIM_TRIGSOURCE_0;
+  hlptim2.Init.Trigger.ActiveEdge = LPTIM_ACTIVEEDGE_RISING;
+  hlptim2.Init.Trigger.SampleTime = LPTIM_TRIGSAMPLETIME_DIRECTTRANSITION;
+  hlptim2.Init.OutputPolarity = LPTIM_OUTPUTPOLARITY_HIGH;
+  hlptim2.Init.UpdateMode = LPTIM_UPDATE_IMMEDIATE;
+  hlptim2.Init.CounterSource = LPTIM_COUNTERSOURCE_INTERNAL;
+  hlptim2.Init.Input1Source = LPTIM_INPUT1SOURCE_GPIO;
+  hlptim2.Init.Input2Source = LPTIM_INPUT2SOURCE_GPIO;
+  if (HAL_LPTIM_Init(&hlptim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN LPTIM2_Init 2 */
+
+  /* USER CODE END LPTIM2_Init 2 */
 
 }
 
@@ -79,16 +115,17 @@ void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef* lptimHandle)
     /* LPTIM1 clock enable */
     __HAL_RCC_LPTIM1_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
     /**LPTIM1 GPIO Configuration
-    PA14     ------> LPTIM1_OUT
+    PB5     ------> LPTIM1_IN1
+    PB6     ------> LPTIM1_ETR
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_14;
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF1_LPTIM1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* LPTIM1 interrupt Init */
     HAL_NVIC_SetPriority(LPTIM1_IRQn, 0, 0);
@@ -96,6 +133,39 @@ void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef* lptimHandle)
   /* USER CODE BEGIN LPTIM1_MspInit 1 */
 
   /* USER CODE END LPTIM1_MspInit 1 */
+  }
+  else if(lptimHandle->Instance==LPTIM2)
+  {
+  /* USER CODE BEGIN LPTIM2_MspInit 0 */
+
+  /* USER CODE END LPTIM2_MspInit 0 */
+
+  /** Initializes the peripherals clocks
+  */
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LPTIM2;
+    PeriphClkInitStruct.Lptim2ClockSelection = RCC_LPTIM2CLKSOURCE_HSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    /* LPTIM2 clock enable */
+    __HAL_RCC_LPTIM2_CLK_ENABLE();
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    /**LPTIM2 GPIO Configuration
+    PA5     ------> LPTIM2_ETR
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_5;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF14_LPTIM2;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN LPTIM2_MspInit 1 */
+
+  /* USER CODE END LPTIM2_MspInit 1 */
   }
 }
 
@@ -111,15 +181,33 @@ void HAL_LPTIM_MspDeInit(LPTIM_HandleTypeDef* lptimHandle)
     __HAL_RCC_LPTIM1_CLK_DISABLE();
 
     /**LPTIM1 GPIO Configuration
-    PA14     ------> LPTIM1_OUT
+    PB5     ------> LPTIM1_IN1
+    PB6     ------> LPTIM1_ETR
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_14);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_5|GPIO_PIN_6);
 
     /* LPTIM1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(LPTIM1_IRQn);
   /* USER CODE BEGIN LPTIM1_MspDeInit 1 */
 
   /* USER CODE END LPTIM1_MspDeInit 1 */
+  }
+  else if(lptimHandle->Instance==LPTIM2)
+  {
+  /* USER CODE BEGIN LPTIM2_MspDeInit 0 */
+
+  /* USER CODE END LPTIM2_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_LPTIM2_CLK_DISABLE();
+
+    /**LPTIM2 GPIO Configuration
+    PA5     ------> LPTIM2_ETR
+    */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5);
+
+  /* USER CODE BEGIN LPTIM2_MspDeInit 1 */
+
+  /* USER CODE END LPTIM2_MspDeInit 1 */
   }
 }
 
