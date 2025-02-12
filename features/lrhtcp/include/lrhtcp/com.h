@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
 //
-// File:        lw_lora_radio.h
-// Description:
+// File:        lrhtcp.h
+// Description: (LightWhale Protocol) definitions of lrhtcp at its fullest
 //
 //------------------------------------------------------------------------------
 //
-// File generated on Jan 2025 by Rin Baudelet
+// File generated on jan 2025 by Rin Baudelet
 //------------------------------------------------------------------------------
 
 /*
@@ -13,13 +13,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-#ifndef _lw_lora_radio_h_
-#define _lw_lora_radio_h_
-#include <stm32wlxx_nucleo_radio.h>
-#include "stm32_radio_driver/radio_driver.h"
+#ifndef _lrhtcp_com_h_
+#define _lrhtcp_com_h_
 
-#include "stm-nucleo-wl55jc-defs.h"
+// Local
+#include "lrhtcp/lrhtcp-defs.h"
 
-void lw_lora_radio_init(void);
 
-#endif //_lw_lora_radio_h_
+
+#endif // _lrhtcp_com_h_

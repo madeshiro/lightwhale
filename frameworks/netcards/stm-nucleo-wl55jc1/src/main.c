@@ -13,22 +13,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-// Board
+// Local
 #include "stm-nucleo-wl55jc-defs.h"
+#include "board.h"
+
 // Driver
 #include "main.h"
+#include "subghz_phy_app.h"
+
+// lrhtcp
+#include <lrhtcp/lrhtcp.h>
+
 // libstdc
-#include <stdlib.h>
 #include <stdbool.h>
-
-typedef struct lw_session_st lw_session;
-struct lw_session_st
-{
-    lw_session_state state;
-
-};
-
-volatile lw_session* session = NULL;
+#include <usart.h>
 
 //
 // HAL Handlers
@@ -42,25 +40,25 @@ void Error_Handler(void)
 
     __disable_irq();
 
-    while (true) /*NOLINT*/;
+    while (1) /*NOLINT*/;
 }
 
 //
 // BSP Callback
 //
 
-void BSP_BP_Callback(Button_TypeDef Button)
+void BSP_PB_Callback(Button_TypeDef Button)
 {
     switch (Button)
     {
-        case BUTTON_SW1:
-
+        case BUTTON_SW1: // Enable HMI mode 1 (Board connection synchronization witness)
+            Nucleo_SetInterfaceMode(NUCLEO_INTERFACE_MODE_SYNC);
             break;
-        case BUTTON_SW2:
-
+        case BUTTON_SW2: // Enable HMI mode 2 (LoRa COM)
+            Nucleo_SetInterfaceMode(NUCLEO_INTERFACE_MODE_LORA);
             break;
-        case BUTTON_SW3:
-
+        case BUTTON_SW3: // Enable HMI mode 3 (UART COM)
+            Nucleo_SetInterfaceMode(NUCLEO_INTERFACE_MODE_UART);
             break;
         default:
             break;
@@ -68,31 +66,35 @@ void BSP_BP_Callback(Button_TypeDef Button)
 }
 
 //
-// BSP HMI      
-//
-
-void update_hmi(void)
-{
-}
-
-//
 // Program
 //
 
-void init()
-{
-    session = (lw_session*)malloc(sizeof(lw_session));
-    session->state = k_lw_session_state_standalone;
-}
-
 void st_main(void)
 {
-    init();
+    printf("========================================\n");
+    printf("Welcome to the Nucleo-64 wl55jc(1)!\n"
+        "\t_ board version %d\n"
+        "\t_ made by Rin Baudelet\n", WL55JC1_NUCLEO_SERIAL_VERSION
+        );
+    printf("========================================\n\n");
+
+    Nucleo_InitBoard();
+
+    uint32_t tick = HAL_GetTick();
 
     while (1) // NOLINT
     {
+        uint32_t now = HAL_GetTick();
 
-        update_hmi();
+        if (now - tick > 10) /* 100Hz HMI update */
+        {
+            Nucleo_UpdateInterface();
+
+            // update tick
+            tick = HAL_GetTick();
+        }
+
+        // Call radio
     }
 
     Error_Handler(); // NOLINT: if program reach this point, an error occured

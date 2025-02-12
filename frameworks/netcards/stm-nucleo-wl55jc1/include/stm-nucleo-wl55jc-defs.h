@@ -15,16 +15,12 @@
  */
 #ifndef _stm_nucleo_wl55jc_defs_h_
 #define _stm_nucleo_wl55jc_defs_h_
-#include "inttypes.h"
+#include "wl55jc1_nucleo_driver.h"
 
-typedef enum
-{
-    k_lw_session_state_undefined = 0,
-    k_lw_session_state_connected = 1,
-    k_lw_session_state_standalone = 2,
-    k_lw_session_state_error = 3,
-} lw_session_state;
+#define WL55JC1_BOARD_LOGS_ENTRY_SIZE 50
 
-typedef uint8_t lw_byte;
+#define NUCLEO_INTERFACE_MODE_SYNC 1
+#define NUCLEO_INTERFACE_MODE_LORA 2
+#define NUCLEO_INTERFACE_MODE_UART 3
 
 #endif // _stm_nucleo_wl55jc_defs_h_

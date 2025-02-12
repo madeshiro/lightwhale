@@ -92,6 +92,9 @@ add_subdirectory(${LIGHTWHALE_PROJECT_ROOT}/drivers/STMicroelectronics/nucleo-wl
 # commons/lwcore
 # add_subdirectory(${LIGHTWHALE_PROJECT_ROOT}/commons/modules/lwcore corelib)
 
+# features/lrhtcp
+add_subdirectory(${LIGHTWHALE_PROJECT_ROOT}/features/lrhtcp lrhtcp)
+
 ########################################
 #####                 ##################
 # // COMPILER FLAGS \\ #################
@@ -138,25 +141,19 @@ endif()
 
 # headers directory
 include_directories(include)
+include_directories(${LIGHTWHALE_PROJECT_ROOT}/drivers/LWNetwork/wl55jc1-nucleo-serial/include)
 
 # headers (h/hpp/hxx)
 set(${PROJECT_UNAME}_HEADERS
     include/${PROJECT_LNAME}-defs.h
-    include/lw_lora_radio.h
-    # include/fsm.h
-    # include/HMI.h
-    # include/Board.h
-    # include/UART.h
+    include/board.h
 )
 
 # sources (c/cpp)
 set(${PROJECT_UNAME}_SOURCES
     src/main.c
-    src/radio.c
-    # src/HMI.cpp
-    # src/Board.cpp
-    # src/Board.cpp
-    # src/UART.cpp
+    src/board.c
+    src/uart.c
 )
 
 ########################################
@@ -168,7 +165,7 @@ set(${PROJECT_UNAME}_SOURCES
 add_executable(${PROJECT_NAME} ${${PROJECT_UNAME}_SOURCES} ${${PROJECT_UNAME}_HEADERS})
 target_link_libraries(${PROJECT_NAME}
     PRIVATE nucleo-wl55jc1
-    #PRIVATE lwcore
+    PRIVATE lrhtcp
 )
 
 add_custom_target(${PROJECT_NAME}_bin
