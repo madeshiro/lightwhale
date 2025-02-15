@@ -72,6 +72,20 @@ Install the [STLink](https://github.com/stlink-org/stlink) toolset by launching 
 sudo apt install stlink-tools
 ```
 
+### 1.4 Alternative to st-link: STM32CubeProgrammer
+
+Goto [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) and 
+download the latest according to your current operating system.
+
+#### 1.4.1 For Linux (from STMicroelectronics website)
+
+**Follow the following step:**
+1. unzip the downloaded zip file
+2. Launch the `.linux` file after changing its mod `chmod +x ./SetupSTM32Prog.linux` (important: 
+   do not use `sudo` mode)
+3. Follow the installation steps... 
+4. STM32CubeProgrammer is ready!
+
 ---
 <div align="center">
   
