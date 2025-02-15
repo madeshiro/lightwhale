@@ -233,6 +233,7 @@ typedef struct lwp_sync_frame_request
     __lrhtcp_header__
 
     uint8_t sync_data_length;      // count of channels available
+    uint8_t sync_spreading_factor; // current spreading factor used to reach the device
     lwp_sync_data_t sync_data[10]; // sort in order of preferences, 10 maximums
 } __lrhtcp_packet__ lwp_lp_sync_frame_rqst_t;
 
